@@ -1,0 +1,31 @@
+POST http://localhost:8080/storage-locations
+Content-Type: application/json
+
+{
+  "name": "Main Library",
+  "description": "Main library storage location"
+}
+
+###
+POST http://localhost:8080/storage-locations
+Content-Type: application/json
+
+{
+"name": "Second Library",
+"description": "Main library storage location"
+}
+###
+GET http://localhost:8080/storage-locations
+###
+
+PUT http://localhost:8080/storage-locations/1
+Content-Type: application/json
+
+{
+"name": "Main Library - Updated",
+"description": "Updated description for main library storage location"
+}
+###
+GET http://localhost:8080/storage-locations
+###
+DELETE http://localhost:8080/storage-locations/1

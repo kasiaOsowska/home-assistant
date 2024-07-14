@@ -1,0 +1,26 @@
+DELETE http://localhost:8080/books
+###
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "title": "wiedzmin",
+  "author": "sapkowski",
+  "storageLocationId": 1,
+  "genre": "Technology"
+}
+###
+PUT http://localhost:8080/books/1
+Content-Type: application/json
+
+{
+  "title": "Spring Boot in Action - Updated",
+  "author": "Craig Walls",
+  "storageLocationId": 1,
+  "genre": "Technology"
+}
+
+###
+GET http://localhost:8080/books/search/storageLocation?storageLocationId=1
+###
+GET http://localhost:8080/books/1

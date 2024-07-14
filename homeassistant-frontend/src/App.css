@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial;
+    font-size: 16px;
+    background-color: #E3DED1; /* Pearl Bush */
+  }
+  
+  App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #C1B59F; /* Bison Hide */
+  }
+  
+  a {
+    color: inherit; /* Same color as the parent */
+    text-decoration: none; /* Remove underline */
+  }
+  a:hover {
+    color: #555; /* Darker shade for hover effect */
+  }
+  
+  button {
+    display: inline-block;
+    padding: 7px 15px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4F493F; /* Armadillo */
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #9b9999; /* Stonewall */
+  }
+  
+  button:hover {
+    background-color: #5F5A4D; /* Soya Bean */
+  }
+  
+  button:active {
+    background-color: #5F5A4D; /* Soya Bean */
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }
+  
+  input[type=text] {
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    background: #f1f1f1;
+    width: 30vw;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px 20px; /* Adjust the values as needed */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #C1B59F; /* Bison Hide */
+  }
+  
+  tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Specific table row colors */
+  tr:nth-child(even) {
+    background-color: #E3DED1; /* Pearl Bush */
+  }
+  
+  tr:nth-child(odd) {
+    background-color: #C1B59F; /* Bison Hide */
+  }
+  
