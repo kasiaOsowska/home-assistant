@@ -8,7 +8,7 @@ import com.github.kasiaOsowska.homeassistant.library.model.StorageLocation;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    List<Book> findByTitleContainingIgnoreCase(String title);
+    List<Book> findByTitle(String title);
     List<Book> findByAuthorContainingIgnoreCase(String author);
     List<Book> findByStorageLocation(StorageLocation storageLocation);
     List<Book> findByGenreContainingIgnoreCase(String genre);

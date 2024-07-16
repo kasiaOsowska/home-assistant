@@ -1,0 +1,15 @@
+POST http://localhost:8080/books/recommend
+Content-Type: application/json
+
+{
+  "description": "A thrilling mystery involving a detective and a series of puzzles."
+}
+###
+POST http://localhost:8080/books/recommend
+Content-Type: application/json
+
+{
+"description": "dla dzieci"
+}
+###
+GET https://jakdojade.pl/olsztyn/Letniskowa/Centrum?fn=Letniskowa&fc=53.792863:20.435354&ft=STOP_GROUP&tn=Centrum&tc=53.777912:20.482344&tt=STOP_GROUP&d=16.07.24&h=15:48&ia=false&flid=stop_group;OLSZTYN;ZKM_OLSZTYN;LETNISKOWA&tlid=stop_group;OLSZTYN;ZKM_OLSZTYN;CENTRUM&fsn=Letniskowa&tsn=Centrum

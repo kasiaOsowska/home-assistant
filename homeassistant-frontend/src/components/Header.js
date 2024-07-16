@@ -1,22 +1,58 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import './Footer.css';
 
-const Header = () => {
+const Header = ({ setView }) => {
   const location = useLocation();
 
-  const renderHeaderContent = () => {
-    switch (location.pathname) {
-      case '/library':
-        return 'Biblioteka';
-      default:
-        return '';
+  const renderMenuItems = () => {
+    if (location.pathname === '/library') {
+      return (
+        <>
+          <li className="nav-item">
+            <Link to="/" className="nav-link">Home</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/library" className="nav-link" onClick={() => setView('search')}>Szukaj</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/library" className="nav-link" onClick={() => setView('recommend')}>Zaproponuj</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/login" className="nav-link">Zarządzaj książkami</Link>
+          </li>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <li className="nav-item">
+            <Link to="/" className="nav-link">Home</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/library" className="nav-link" onClick={() => setView('start')}>Biblioteka</Link>
+          </li>
+        </>
+      );
     }
   };
 
   return (
-    <header>
-      <h3>Home Assistant</h3>
-      <h1>{renderHeaderContent()}</h1>
+    <header className="navigation-wrap">
+      <div>
+        <div>
+          <div>
+            <nav className="navbar">
+              <h3 style={{ marginLeft: "20px" }}>home-assistant</h3>
+              <div className="navbar-collapse">
+                <ul className="navbar-nav">
+                  {renderMenuItems()}
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
     </header>
   );
 };

@@ -46,7 +46,7 @@ public class BookService {
 
     // Metody wyszukiwania
     public List<Book> findBooksByTitle(String title) {
-        return bookRepository.findByTitleContainingIgnoreCase(title);
+        return bookRepository.findByTitle(title);
     }
 
     public List<Book> findBooksByAuthor(String author) {
@@ -63,4 +63,5 @@ public class BookService {
     public List<String> autocompleteBookTitles(String query) {
         return bookRepository.findTitlesByTitleOrAuthorContainingIgnoreCase(query);
     }
+
 }

@@ -1,85 +1,121 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SearchBar from './SearchBarLibrary';
-import BookDetails from './BookDetails';
+import BookRecommendation from './BookRecommendation';
 
-const LibraryHome = () => {
-  const [allBooks, setAllBooks] = useState([]);
+const LibraryHome = ({ view }) => {
   const [searchResults, setSearchResults] = useState([]);
-  const [selectedBook, setSelectedBook] = useState(null);
+  const [isSearching, setIsSearching] = useState(false); // New state to track if a search is being performed
 
-  const fetchBooks = () => {
+  const fetchAllBooks = () => {
     axios.get('http://localhost:8080/books')
       .then(response => {
-        setAllBooks(response.data);
+        setSearchResults(response.data);
+        setIsSearching(false); // Reset to indicate random books are being shown
       })
       .catch(error => {
-        console.error('There was an error fetching the books!', error);
+        console.error('There was an error fetching all books!', error);
       });
   };
 
   const handleSearch = (query) => {
-    axios.get(`http://localhost:8080/books/search/title?title=${query}`)
+    if (!query) {
+      fetchAllBooks();
+    } else {
+      setIsSearching(true); // Indicate that a search is being performed
+      axios.get(`http://localhost:8080/books/search/title?title=${query}`)
+        .then(response => {
+          setSearchResults(response.data);
+        })
+        .catch(error => {
+          console.error('There was an error searching for books!', error);
+        });
+    }
+  };
+
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+  
+  const fetchRandomBooks = () => {
+    axios.get('http://localhost:8080/books')
       .then(response => {
-        setSearchResults(response.data);
+        const allBooks = response.data;
+        const shuffledBooks = shuffleArray(allBooks);
+        const randomBooks = shuffledBooks.slice(0, 5);
+        setSearchResults(randomBooks);
+        setIsSearching(false); // Indicate that random books are being shown
       })
       .catch(error => {
-        console.error('There was an error searching for books!', error);
+        console.error('There was an error fetching random books!', error);
       });
   };
 
   const handleSuggestionClick = (suggestion) => {
-    axios.get(`http://localhost:8080/books/search/title?title=${suggestion}`)
-      .then(response => {
-        setSearchResults(response.data); 
-      })
-      .catch(error => {
-        console.error('There was an error fetching the book details!', error);
-      });
+    if (!suggestion) {
+      fetchAllBooks();
+    } else {
+      setIsSearching(true); // Indicate that a search is being performed
+      axios.get(`http://localhost:8080/books/search/title?title=${suggestion}`)
+        .then(response => {
+          setSearchResults(response.data);
+        })
+        .catch(error => {
+          console.error('There was an error fetching the book details!', error);
+        });
+    }
   };
 
-  const renderTable = (books) => (
-    <table>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Genre</th>
-          <th>Location</th>
-        </tr>
-      </thead>
-      <tbody>
-        {books.map(book => (
-          <tr key={book.id}>
-            <td>{book.title}</td>
-            <td>{book.author}</td>
-            <td>{book.genre}</td>
-            <td>{book.storageLocation.name}</td>
+  useEffect(() => {
+    fetchRandomBooks();
+  }, []);
+
+  const renderTable = (books) => {
+    // Sort books alphabetically by title
+    const sortedBooks = books.sort((a, b) => a.title.localeCompare(b.title));
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Tytuł</th>
+            <th>Autor</th>
+            <th>Gatunek</th>
+            <th>Lokalizacja</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+        </thead>
+        <tbody>
+          {sortedBooks.map(book => (
+            <tr key={book.id}>
+              <td>{book.title}</td>
+              <td>{book.author}</td>
+              <td>{book.genre}</td>
+              <td>{book.storageLocation.name}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5vh' }}>
       <div style={{ marginRight: '5vw' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <SearchBar onSearch={handleSearch} onSuggestionClick={handleSuggestionClick} />
-        </div>
+        {view === 'search' && (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <SearchBar onSearch={handleSearch} onSuggestionClick={handleSuggestionClick} />
+          </div>
+        )}
+        {view === 'recommend' && <BookRecommendation />}
         <div>
-          <h3>Search Results</h3>
+          <h3>{isSearching ? 'Wyniki wyszukiwania' : 'Losowe książki'}</h3> {/* Conditional heading */}
           {renderTable(searchResults)}
         </div>
       </div>
-      <div>
-        <button onClick={fetchBooks} style={{  marginTop: '1vh' }}>Fetch All Books</button>
-        <div style={{  marginTop: '3vh' }}>
-          <h3>All Books</h3>
-          {renderTable(allBooks)}
-        </div>
-      </div>
-      {selectedBook && <BookDetails book={selectedBook} />}
     </div>
   );
 };

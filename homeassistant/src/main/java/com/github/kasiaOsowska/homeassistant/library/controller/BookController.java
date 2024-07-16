@@ -7,6 +7,7 @@ import com.github.kasiaOsowska.homeassistant.library.service.BookService;
 import com.github.kasiaOsowska.homeassistant.library.dto.BookDto;
 import com.github.kasiaOsowska.homeassistant.library.model.StorageLocation;
 import com.github.kasiaOsowska.homeassistant.library.service.StorageLocationService;
+import com.github.kasiaOsowska.homeassistant.library.service.OpenAIService;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,11 +18,14 @@ public class BookController {
 
     private final BookService bookService;
     private final StorageLocationService storageLocationService;
+    private final OpenAIService openAIService;
+
 
     @Autowired
-    public BookController(BookService bookService, StorageLocationService storageLocationService) {
+    public BookController(BookService bookService, StorageLocationService storageLocationService, OpenAIService openAIService) {
         this.bookService = bookService;
         this.storageLocationService = storageLocationService;
+        this.openAIService = openAIService;
     }
 
     @PostMapping
@@ -105,5 +109,15 @@ public class BookController {
     public ResponseEntity<List<String>> autocompleteBooks(@RequestParam String query) {
         List<String> titles = bookService.autocompleteBookTitles(query);
         return ResponseEntity.ok(titles);
+    }
+    @PostMapping("/recommend")
+    public ResponseEntity<String> recommendBook(@RequestBody String description) {
+        List<Book> books = bookService.getAllBooks();
+        try {
+            String recommendation = openAIService.getBookRecommendation(description, books);
+            return ResponseEntity.ok(recommendation);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(429).body(e.getMessage());
+        }
     }
 }

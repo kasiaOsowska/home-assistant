@@ -57,9 +57,19 @@ body {
     background: #f1f1f1;
     width: 30vw;
   }
-  
+
+  input[type=password] {
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    background: #f1f1f1;
+    width: 30vw;
+  }
+
   table {
-    width: 100%;
+    width: 800px;
     border-collapse: collapse;
   }
   
@@ -78,11 +88,31 @@ body {
   }
   
   /* Specific table row colors */
-  tr:nth-child(even) {
+  tr:nth-child(odd) {
     background-color: #E3DED1; /* Pearl Bush */
   }
   
-  tr:nth-child(odd) {
+  tr:nth-child(even) {
     background-color: #C1B59F; /* Bison Hide */
   }
   
+  textarea {
+    padding: 10px;
+    font-size: 17px;
+    border: none;
+    border-radius: 4px;
+    background: #f1f1f1;
+    width: 800px;
+    font-family: Arial;
+  }
+  .output {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    background: #E3DED1; /* Pearl Bush */
+    font-family: Arial;
+    color: #4F493F; /* Armadillo */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for emphasis */
+    margin-top: 15px;
+    width: 800px;
+  }

@@ -2,16 +2,56 @@ footer {
   background-color: #5F5A4D; /* Soya Bean */
   text-align: center;
   margin-bottom: 0;
-  color: white;
+  color: #e0e0e0;
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 5px;
 }
 
 header {
-  background-color: #4F493F; /* Armadillo */
-  padding: 10px;
+  background-color: #5F5A4D; 
+  padding: 5px;
   text-align: center;
-  color: white;
+  color: #333;
 }
+
+.navigation-wrap {
+  background-color: #C1B59F; /* Bison Hide */
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.5rem 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-nav {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  padding: 0.5rem 1rem;
+  display: block;
+}
+
+.nav-link:hover {
+  color: #666161;
+}
+
+
+
+
+

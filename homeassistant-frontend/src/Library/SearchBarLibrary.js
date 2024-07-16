@@ -43,13 +43,24 @@ const SearchBar = ({ onSearch, onSuggestionClick }) => {
         placeholder="Szukaj po tytule lub autorze..."
       />
       <button onClick={handleSearch}>Szukaj</button>
-      <ul>
-        {suggestions.map((suggestion, index) => (
-          <a key={index} onClick={() => handleSuggestionClick(suggestion)}style={{cursor: 'pointer'}}>
-            {suggestion}
-          </a>
-        ))}
-      </ul>
+      <h3>Podpowiedź</h3>
+      {suggestions.length > 0 && (
+        <table>
+          
+          <thead>
+            <tr>
+              <th>Tytuł</th>
+            </tr>
+          </thead>
+          <tbody>
+            {suggestions.map((suggestion, index) => (
+              <tr key={index} onClick={() => handleSuggestionClick(suggestion)} style={{ cursor: 'pointer' }}>
+                <td>{suggestion}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

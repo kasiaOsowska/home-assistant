@@ -11,8 +11,7 @@ POST http://localhost:8080/storage-locations
 Content-Type: application/json
 
 {
-"name": "Second Library",
-"description": "Main library storage location"
+"name": "Dom piętro"
 }
 ###
 GET http://localhost:8080/storage-locations
