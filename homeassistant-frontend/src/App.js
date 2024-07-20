@@ -19,10 +19,10 @@ function App() {
         <div className="App">
           <Header setView={setView} />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/library" element={<LibraryHome view={view} />} />
-            <Route path="/library/add" element={<ProtectedRoute element={<AddBookAndLocation />} />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/home-assistant" element={<Home />} />
+            <Route path="/home-assistant/library" element={<LibraryHome view={view} />} />
+            <Route path="/home-assistant/library/add" element={<ProtectedRoute element={<AddBookAndLocation />} />} />
+            <Route path="/home-assistant/login" element={<Login />} />
           </Routes>
           <Footer />
         </div>

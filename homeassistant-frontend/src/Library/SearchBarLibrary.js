@@ -7,7 +7,7 @@ const SearchBar = ({ onSearch, onSuggestionClick }) => {
 
   useEffect(() => {
     if (query.length > 2) {
-      axios.get(`http://localhost:8080/books/autocomplete?query=${query}`)
+      axios.get(`http://localhost:8080/home-assistant/api/books/autocomplete?query=${query}`)
         .then(response => {
           setSuggestions(response.data);
         })

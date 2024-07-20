@@ -11,7 +11,7 @@ const AddBookAndLocation = () => {
 
   useEffect(() => {
     // Fetch available storage locations from backend
-    axios.get('http://localhost:8080/storage-locations')
+    axios.get('http://localhost:8080/home-assistant/api/storage-locations')
       .then(response => {
         setLocations(response.data);
       })
@@ -28,7 +28,7 @@ const AddBookAndLocation = () => {
       storageLocationId: storageLocationId
     };
 
-    axios.post('http://localhost:8080/books', bookData)
+    axios.post('http://localhost:8080/home-assistant/api/books', bookData)
       .then(response => {
         alert('Book added successfully');
         setBookTitle('');
@@ -44,12 +44,12 @@ const AddBookAndLocation = () => {
   const handleAddLocation = () => {
     const locationData = { name: locationName };
 
-    axios.post('http://localhost:8080/storage-locations', locationData)
+    axios.post('http://localhost:8080/home-assistant/api/storage-locations', locationData)
       .then(response => {
         alert('Location added successfully');
         setLocationName('');
         // Optionally, fetch the updated list of locations
-        axios.get('http://localhost:8080/storage-locations')
+        axios.get('http://localhost:8080/home-assistant/api/storage-locations')
           .then(response => {
             setLocations(response.data);
           });

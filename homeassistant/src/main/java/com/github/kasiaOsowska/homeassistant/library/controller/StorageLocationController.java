@@ -8,7 +8,7 @@ import com.github.kasiaOsowska.homeassistant.library.service.StorageLocationServ
 import java.util.List;
 
 @RestController
-@RequestMapping("/storage-locations")
+@RequestMapping("home-assistant/api/storage-locations")
 public class StorageLocationController {
 
     private final StorageLocationService storageLocationService;

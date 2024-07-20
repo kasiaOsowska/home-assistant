@@ -15,7 +15,7 @@ const Login = () => {
     console.log("test"+validCredentials); // Add this line to debug
     if (username === validCredentials.username && password === validCredentials.password) {
       login();
-      navigate('/library/add');
+      navigate('/home-assistant/library/add');
     } else {
       setError('Invalid username or password');
     }

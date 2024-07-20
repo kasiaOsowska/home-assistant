@@ -5,7 +5,7 @@ const BookFetcher = () => {
   const [books, setBooks] = useState([]);
 
   const fetchBooks = () => {
-    axios.get('http://localhost:8080/books')
+    axios.get('http://localhost:8080/home-assistant/api/books')
       .then(response => {
         setBooks(response.data);
       })

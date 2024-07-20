@@ -8,7 +8,7 @@ const LibraryHome = ({ view }) => {
   const [isSearching, setIsSearching] = useState(false); // New state to track if a search is being performed
 
   const fetchAllBooks = () => {
-    axios.get('http://localhost:8080/books')
+    axios.get('http://localhost:8080/home-assistant/api/books')
       .then(response => {
         setSearchResults(response.data);
         setIsSearching(false); // Reset to indicate random books are being shown
@@ -23,7 +23,7 @@ const LibraryHome = ({ view }) => {
       fetchAllBooks();
     } else {
       setIsSearching(true); // Indicate that a search is being performed
-      axios.get(`http://localhost:8080/books/search/title?title=${query}`)
+      axios.get(`http://localhost:8080/home-assistant/api/books/search/title?title=${query}`)
         .then(response => {
           setSearchResults(response.data);
         })
@@ -42,7 +42,7 @@ const LibraryHome = ({ view }) => {
   };
   
   const fetchRandomBooks = () => {
-    axios.get('http://localhost:8080/books')
+    axios.get('http://localhost:8080/home-assistant/api/books')
       .then(response => {
         const allBooks = response.data;
         const shuffledBooks = shuffleArray(allBooks);
@@ -60,7 +60,7 @@ const LibraryHome = ({ view }) => {
       fetchAllBooks();
     } else {
       setIsSearching(true); // Indicate that a search is being performed
-      axios.get(`http://localhost:8080/books/search/title?title=${suggestion}`)
+      axios.get(`http://localhost:8080/home-assistant/api/books/search/title?title=${suggestion}`)
         .then(response => {
           setSearchResults(response.data);
         })

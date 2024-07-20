@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("home-assistant/api/books")
 public class BookController {
 
     private final BookService bookService;

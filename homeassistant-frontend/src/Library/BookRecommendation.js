@@ -15,7 +15,7 @@ const BookRecommendation = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.post('http://localhost:8080/books/recommend', description, {
+      const response = await axios.post('http://localhost:8080/home-assistant/api/books/recommend', description, {
         headers: {
           'Content-Type': 'application/json'
         }

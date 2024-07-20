@@ -6,20 +6,20 @@ const Header = ({ setView }) => {
   const location = useLocation();
 
   const renderMenuItems = () => {
-    if (location.pathname === '/library') {
+    if (location.pathname === '/home-assistant/library') {
       return (
         <>
           <li className="nav-item">
-            <Link to="/" className="nav-link">Home</Link>
+            <Link to="/home-assistant" className="nav-link">Home</Link>
           </li>
           <li className="nav-item">
-            <Link to="/library" className="nav-link" onClick={() => setView('search')}>Szukaj</Link>
+            <Link to="/home-assistant/library" className="nav-link" onClick={() => setView('search')}>Szukaj</Link>
           </li>
           <li className="nav-item">
-            <Link to="/library" className="nav-link" onClick={() => setView('recommend')}>Zaproponuj</Link>
+            <Link to="/home-assistant/library" className="nav-link" onClick={() => setView('recommend')}>Zaproponuj</Link>
           </li>
           <li className="nav-item">
-            <Link to="/login" className="nav-link">Zarządzaj książkami</Link>
+            <Link to="/home-assistant/login" className="nav-link">Zarządzaj książkami</Link>
           </li>
         </>
       );
@@ -27,10 +27,10 @@ const Header = ({ setView }) => {
       return (
         <>
           <li className="nav-item">
-            <Link to="/" className="nav-link">Home</Link>
+            <Link to="/home-assistant/" className="nav-link">Home</Link>
           </li>
           <li className="nav-item">
-            <Link to="/library" className="nav-link" onClick={() => setView('start')}>Biblioteka</Link>
+            <Link to="/home-assistant/library" className="nav-link" onClick={() => setView('start')}>Biblioteka</Link>
           </li>
         </>
       );
