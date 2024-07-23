@@ -43,4 +43,11 @@ public class StorageLocationController {
         storageLocationService.deleteStorageLocationById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/name")
+    public ResponseEntity<String> getStorageLocationNameById(@PathVariable Long id) {
+        return storageLocationService.getStorageLocationById(id)
+                .map(storageLocation -> ResponseEntity.ok(storageLocation.getName()))
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

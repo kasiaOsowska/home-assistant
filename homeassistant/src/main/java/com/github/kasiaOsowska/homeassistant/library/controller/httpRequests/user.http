@@ -1,0 +1,30 @@
+# Register a User
+POST http://localhost:8080/home-assistant/api/users/register
+Content-Type: application/x-www-form-urlencoded
+
+username=testuser&password=password123
+
+###
+# Login a User
+POST http://localhost:8080/home-assistant/api/users/login
+Content-Type: application/x-www-form-urlencoded
+
+username=testuser
+password=password123
+
+###
+# Get User GUID
+GET http://localhost:8080/home-assistant/api/users/1/guid
+
+###
+# Delete a User
+DELETE http://localhost:8080/home-assistant/api/users/1
+
+###
+# Get User GUID
+GET http://localhost:8080/home-assistant/api/users/all-except
+Content-Type: application/x-www-form-urlencoded
+
+sessionId=404bd6b5-13d8-4da3-94d1-b700a128de96
+
+###

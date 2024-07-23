@@ -1,3 +1,4 @@
+# @no-redirect
 POST http://localhost:8080/books/recommend
 Content-Type: application/json
 

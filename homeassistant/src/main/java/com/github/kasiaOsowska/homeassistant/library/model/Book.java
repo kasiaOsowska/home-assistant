@@ -1,16 +1,12 @@
 package com.github.kasiaOsowska.homeassistant.library.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import java.util.Objects;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 @Getter
@@ -32,7 +28,11 @@ public class Book {
 
     private String genre;
 
-    // Konstruktor z argumentami (bez id)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private AppUser user;
+
+
     public Book(String title, String author, StorageLocation storageLocation, String genre) {
         this.title = title;
         this.author = author;

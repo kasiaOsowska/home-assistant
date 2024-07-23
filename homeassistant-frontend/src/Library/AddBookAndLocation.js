@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '../components/AuthContext';
+import ShareBook from './ShareBook';
+import UnshareBook from './UnshareBook';
 
 const AddBookAndLocation = () => {
   const [bookTitle, setBookTitle] = useState('');
@@ -8,9 +11,13 @@ const AddBookAndLocation = () => {
   const [storageLocationId, setStorageLocationId] = useState('');
   const [locations, setLocations] = useState([]);
   const [locationName, setLocationName] = useState('');
+  const [selectedLocationId, setSelectedLocationId] = useState('');
+  const [newLocationName, setNewLocationName] = useState('');
+  const [showShareBook, setShowShareBook] = useState(false);
+  const [showUnshareBook, setShowUnshareBook] = useState(false);
+  const { sessionId } = useAuth();
 
   useEffect(() => {
-    // Fetch available storage locations from backend
     axios.get('http://localhost:8080/home-assistant/api/storage-locations')
       .then(response => {
         setLocations(response.data);
@@ -28,7 +35,9 @@ const AddBookAndLocation = () => {
       storageLocationId: storageLocationId
     };
 
-    axios.post('http://localhost:8080/home-assistant/api/books', bookData)
+    axios.post('http://localhost:8080/home-assistant/api/books', bookData, {
+      params: { sessionId }
+    })
       .then(response => {
         alert('Book added successfully');
         setBookTitle('');
@@ -37,7 +46,12 @@ const AddBookAndLocation = () => {
         setStorageLocationId('');
       })
       .catch(error => {
-        console.error('There was an error adding the book!', error);
+        if (error.response) {
+          console.error('Error status:', error.response.status);
+          console.error('Error details:', error.response.data);
+        } else {
+          console.error('Error:', error.message);
+        }
       });
   };
 
@@ -48,7 +62,6 @@ const AddBookAndLocation = () => {
       .then(response => {
         alert('Location added successfully');
         setLocationName('');
-        // Optionally, fetch the updated list of locations
         axios.get('http://localhost:8080/home-assistant/api/storage-locations')
           .then(response => {
             setLocations(response.data);
@@ -59,55 +72,111 @@ const AddBookAndLocation = () => {
       });
   };
 
-return (
-    <div>
-        <h2>Add New Book</h2>
+  const handleUpdateLocation = () => {
+    const locationData = { name: newLocationName };
+
+    axios.put(`http://localhost:8080/home-assistant/api/storage-locations/${selectedLocationId}`, locationData)
+      .then(response => {
+        alert('Location updated successfully');
+        setNewLocationName('');
+        setSelectedLocationId('');
+        axios.get('http://localhost:8080/home-assistant/api/storage-locations')
+          .then(response => {
+            setLocations(response.data);
+          });
+      })
+      .catch(error => {
+        console.error('There was an error updating the location!', error);
+      });
+  };
+
+  const handleShareSuccess = () => {
+    setShowShareBook(false);
+  };
+
+  const handleUnshareSuccess = () => {
+    setShowUnshareBook(false);
+  };
+
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5vh' }}>
+      <div>
+        <h2>Dodaj nową książkę</h2>
         <input
-            type="text"
-            value={bookTitle}
-            onChange={(e) => setBookTitle(e.target.value)}
-            placeholder="Book Title"
+          type="text"
+          value={bookTitle}
+          onChange={(e) => setBookTitle(e.target.value)}
+          placeholder="Tytuł książki"
         />
         <br />
         <input
-            type="text"
-            value={bookAuthor}
-            onChange={(e) => setBookAuthor(e.target.value)}
-            placeholder="Book Author"
+          type="text"
+          value={bookAuthor}
+          onChange={(e) => setBookAuthor(e.target.value)}
+          placeholder="Autor książki"
         />
         <br />
         <input
-            type="text"
-            value={bookGenre}
-            onChange={(e) => setBookGenre(e.target.value)}
-            placeholder="Book Genre"
+          type="text"
+          value={bookGenre}
+          onChange={(e) => setBookGenre(e.target.value)}
+          placeholder="Gatunek książki"
         />
         <br />
         <select
-            value={storageLocationId}
-            onChange={(e) => setStorageLocationId(e.target.value)}
+          value={storageLocationId}
+          onChange={(e) => setStorageLocationId(e.target.value)}
         >
-            <option value="">Select Storage Location</option>
-            {locations.map(location => (
-                <option key={location.id} value={location.id}>
-                    {location.name}
-                </option>
-            ))}
+          <option value="">Wybierz lokalizację przechowywania</option>
+          {locations.map(location => (
+            <option key={location.id} value={location.id}>
+              {location.name}
+            </option>
+          ))}
         </select>
         <br />
-        <button onClick={handleAddBook}>Add Book</button>
+        <button onClick={handleAddBook}>Dodaj książkę</button>
 
-        <h2>Add New Location</h2>
+        <h2>Dodaj nową lokalizację</h2>
         <input
-            type="text"
-            value={locationName}
-            onChange={(e) => setLocationName(e.target.value)}
-            placeholder="Location Name"
+          type="text"
+          value={locationName}
+          onChange={(e) => setLocationName(e.target.value)}
+          placeholder="Nazwa lokalizacji"
         />
         <br />
-        <button onClick={handleAddLocation}>Add Location</button>
+        <button onClick={handleAddLocation}>Dodaj lokalizację</button>
+
+        <h2>Aktualizuj lokalizację</h2>
+        <select
+          value={selectedLocationId}
+          onChange={(e) => setSelectedLocationId(e.target.value)}
+        >
+          <option value="">Wybierz lokalizację do aktualizacji</option>
+          {locations.map(location => (
+            <option key={location.id} value={location.id}>
+              {location.name}
+            </option>
+          ))}
+        </select>
+        <br />
+        <input
+          type="text"
+          value={newLocationName}
+          onChange={(e) => setNewLocationName(e.target.value)}
+          placeholder="Nowa nazwa lokalizacji"
+        />
+        <br />
+        <button onClick={handleUpdateLocation}>Aktualizuj lokalizację</button>
+      </div>
+
+      <div>
+        {<ShareBook sessionId={sessionId} onShareSuccess={handleShareSuccess} />}
+        
+        {<UnshareBook sessionId={sessionId} onUnshareSuccess={handleUnshareSuccess} />}
+      </div>
     </div>
-);
+  );
 };
 
 export default AddBookAndLocation;

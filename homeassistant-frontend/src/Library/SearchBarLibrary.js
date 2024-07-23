@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '../components/AuthContext';
 
 const SearchBar = ({ onSearch, onSuggestionClick }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const { sessionId } = useAuth();
 
   useEffect(() => {
     if (query.length > 2) {
-      axios.get(`http://localhost:8080/home-assistant/api/books/autocomplete?query=${query}`)
-        .then(response => {
-          setSuggestions(response.data);
-        })
-        .catch(error => {
-          console.error('There was an error fetching the suggestions!', error);
-        });
+      axios.get(`http://localhost:8080/home-assistant/api/books/autocomplete`, {
+        params: { query, sessionId }
+      })
+      .then(response => {
+        setSuggestions(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the suggestions!', error);
+      });
     } else {
       setSuggestions([]);
     }
-  }, [query]);
+  }, [query, sessionId]);
 
   const handleInputChange = (event) => {
     setQuery(event.target.value);
@@ -46,7 +50,6 @@ const SearchBar = ({ onSearch, onSuggestionClick }) => {
       <h3>Podpowiedź</h3>
       {suggestions.length > 0 && (
         <table>
-          
           <thead>
             <tr>
               <th>Tytuł</th>

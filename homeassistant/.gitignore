@@ -24,8 +24,4 @@ hs_err_pid*
 replay_pid*
 
 #IDE cache
-./.idea/
-
-#other
-./databse/
-./target/
+./.idea

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { ValidCredentials } from './credentials';
+import axios from 'axios';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -9,16 +9,18 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
-  const validCredentials = ValidCredentials;
-  
+
   const handleLogin = () => {
-    console.log("test"+validCredentials); // Add this line to debug
-    if (username === validCredentials.username && password === validCredentials.password) {
-      login();
-      navigate('/home-assistant/library/add');
-    } else {
+    axios.post('http://localhost:8080/home-assistant/api/users/login', null, {
+      params: { username, password }
+    })
+    .then(response => {
+      login(response.data); // store sessionId
+      navigate('/home-assistant/library');
+    })
+    .catch(error => {
       setError('Invalid username or password');
-    }
+    });
   };
 
   return (

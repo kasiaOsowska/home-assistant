@@ -8,10 +8,14 @@ import com.github.kasiaOsowska.homeassistant.library.model.StorageLocation;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    List<Book> findByTitle(String title);
-    List<Book> findByAuthorContainingIgnoreCase(String author);
-    List<Book> findByStorageLocation(StorageLocation storageLocation);
-    List<Book> findByGenreContainingIgnoreCase(String genre);
-    @Query("SELECT b.title FROM Book b WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(b.author) LIKE LOWER(CONCAT('%', :query, '%'))")
-    List<String> findTitlesByTitleOrAuthorContainingIgnoreCase(String query);
+    List<Book> findByTitleAndUserId(String title, Long userId);
+    List<Book> findByAuthorContainingIgnoreCaseAndUserId(String author, Long userId);
+    List<Book> findByStorageLocationAndUserId(StorageLocation storageLocation, Long userId);
+    List<Book> findByGenreContainingIgnoreCaseAndUserId(String genre, Long userId);
+
+    @Query("SELECT b.title FROM Book b WHERE (LOWER(b.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(b.author) LIKE LOWER(CONCAT('%', :query, '%'))) AND b.user.id = :userId")
+    List<String> findTitlesByTitleOrAuthorContainingIgnoreCaseAndUserId(String query, Long userId);
+
+    List<Book>findByUserId(Long userId);
+
 }

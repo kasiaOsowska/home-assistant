@@ -116,3 +116,38 @@ body {
     margin-top: 15px;
     width: 800px;
   }
+  .share-content {
+    width: 35%;
+  }
+
+  select {
+    padding: 10px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
+    border-radius: 4px;
+    background: #f1f1f1;
+    width: 30vw;
+    color: #4F493F; /* Armadillo */
+    appearance: none; /* Removes the default arrow in most browsers */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><polygon fill="%234F493F" points="0,0 20,0 10,10"/></svg>'); /* Custom arrow icon */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  
+  select:focus {
+    outline: none; /* Removes the default focus outline */
+    box-shadow: 0 0 2px 2px #C1B59F; /* Add a focus shadow */
+  }
+  
+  option {
+    padding: 10px;
+    color: #4F493F; /* Armadillo */
+    background: #E3DED1; /* Pearl Bush */
+  }
+  
+  option:hover {
+    background-color: #C1B59F; /* Bison Hide */
+  }
+
+  

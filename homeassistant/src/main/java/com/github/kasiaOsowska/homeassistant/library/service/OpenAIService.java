@@ -1,5 +1,6 @@
 package com.github.kasiaOsowska.homeassistant.library.service;
 
+import com.github.kasiaOsowska.homeassistant.library.dto.BookDto;
 import com.github.kasiaOsowska.homeassistant.library.model.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -30,7 +31,7 @@ public class OpenAIService {
 
     private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
-    public String getBookRecommendation(String description, List<Book> books) {
+    public String getBookRecommendation(String description, List<BookDto> books) {
         HttpEntity<String> request = new HttpEntity<>(createRequestBody(description, books), headers);
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_API_URL, request, String.class);
@@ -59,14 +60,14 @@ public class OpenAIService {
         }
     }
 
-    private String createRequestBody(String description, List<Book> books) {
+    private String createRequestBody(String description, List<BookDto> books) {
         String booksList = books.stream()
                 .map(book -> "Title: " + book.getTitle() + ", Author: " + book.getAuthor() + ", Genre: " + book.getGenre())
                 .collect(Collectors.joining("\\n"));
 
         return "{"
                 + "\"model\": \"gpt-3.5-turbo\","
-                + "\"messages\": [{\"role\": \"user\", \"content\": \"To jest lista książek z mojej bazy danych: \\n" + booksList + "\\n\\n i opis użytkownika co chce przeczytać: " + escapeJson(description) + ", zaproponuj jedną lub kilka książek, napisz jedynie tytuł i autora oraz krótki opis\"}],"
+                + "\"messages\": [{\"role\": \"user\", \"content\": \"To jest lista książek z mojej bazy danych: \\n" + booksList + "\\n\\n i opis użytkownika co chce przeczytać: " + escapeJson(description) + ", zaproponuj jedną lub kilka książek, napisz jedynie tytuł i autora\"}],"
                 + "\"max_tokens\": 200"
                 + "}";
     }
@@ -80,7 +81,6 @@ public class OpenAIService {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(responseBody);
             JsonNode messageNode = rootNode.path("choices").get(0).path("message").path("content");
-            System.out.print(messageNode.asText());
             return messageNode.asText();
         } catch (IOException e) {
             logger.error("Failed to parse response from OpenAI: " + e.getMessage());

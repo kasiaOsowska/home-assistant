@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../components/AuthContext';
 
 const BookRecommendation = () => {
   const [description, setDescription] = useState('');
   const [recommendation, setRecommendation] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { sessionId } = useAuth();
 
   const handleInputChange = (e) => {
     setDescription(e.target.value);
@@ -18,6 +20,9 @@ const BookRecommendation = () => {
       const response = await axios.post('http://localhost:8080/home-assistant/api/books/recommend', description, {
         headers: {
           'Content-Type': 'application/json'
+        },
+        params: {
+          sessionId: sessionId
         }
       });
       setRecommendation(response.data);

@@ -2,34 +2,40 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SearchBar from './SearchBarLibrary';
 import BookRecommendation from './BookRecommendation';
+import { useAuth } from '../components/AuthContext';
 
 const LibraryHome = ({ view }) => {
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false); // New state to track if a search is being performed
+  const [isSearching, setIsSearching] = useState(false);
+  const { sessionId } = useAuth();
+
+  const fetchBooks = (url) => {
+    axios.get(url, {
+      params: { sessionId }
+    })
+    .then(response => {
+      setSearchResults(response.data);
+      setIsSearching(false);
+    })
+    .catch(error => {
+      console.error('There was an error fetching the books!', error);
+    });
+  };
 
   const fetchAllBooks = () => {
-    axios.get('http://localhost:8080/home-assistant/api/books')
-      .then(response => {
-        setSearchResults(response.data);
-        setIsSearching(false); // Reset to indicate random books are being shown
-      })
-      .catch(error => {
-        console.error('There was an error fetching all books!', error);
-      });
+    fetchBooks('http://localhost:8080/home-assistant/api/books/all');
+  };
+
+  const fetchUserBooks = () => {
+    fetchBooks('http://localhost:8080/home-assistant/api/books/by-user');
   };
 
   const handleSearch = (query) => {
     if (!query) {
-      fetchAllBooks();
+      fetchUserBooks();
     } else {
-      setIsSearching(true); // Indicate that a search is being performed
-      axios.get(`http://localhost:8080/home-assistant/api/books/search/title?title=${query}`)
-        .then(response => {
-          setSearchResults(response.data);
-        })
-        .catch(error => {
-          console.error('There was an error searching for books!', error);
-        });
+      setIsSearching(true);
+      fetchBooks(`http://localhost:8080/home-assistant/api/books/search/title?title=${query}`);
     }
   };
 
@@ -40,33 +46,44 @@ const LibraryHome = ({ view }) => {
     }
     return array;
   };
-  
+
+  const fetchStorageLocationName = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/home-assistant/api/storage-locations/${id}/name`);
+      return response.data;
+    } catch (error) {
+      console.error('There was an error fetching the storage location name!', error);
+      return '';
+    }
+  };
+
   const fetchRandomBooks = () => {
-    axios.get('http://localhost:8080/home-assistant/api/books')
-      .then(response => {
-        const allBooks = response.data;
-        const shuffledBooks = shuffleArray(allBooks);
-        const randomBooks = shuffledBooks.slice(0, 5);
-        setSearchResults(randomBooks);
-        setIsSearching(false); // Indicate that random books are being shown
-      })
-      .catch(error => {
-        console.error('There was an error fetching random books!', error);
-      });
+    axios.get('http://localhost:8080/home-assistant/api/books/by-user', {
+      params: { sessionId }
+    })
+    .then(async response => {
+      const allBooks = response.data;
+      const shuffledBooks = shuffleArray([...allBooks]);
+      const randomBooks = shuffledBooks.slice(0, 5);
+
+      for (const book of randomBooks) {
+        book.storageLocationName = await fetchStorageLocationName(book.storageLocationId);
+      }
+
+      setSearchResults(randomBooks);
+      setIsSearching(false);
+    })
+    .catch(error => {
+      console.error('There was an error fetching random books!', error);
+    });
   };
 
   const handleSuggestionClick = (suggestion) => {
     if (!suggestion) {
-      fetchAllBooks();
+      fetchUserBooks();
     } else {
-      setIsSearching(true); // Indicate that a search is being performed
-      axios.get(`http://localhost:8080/home-assistant/api/books/search/title?title=${suggestion}`)
-        .then(response => {
-          setSearchResults(response.data);
-        })
-        .catch(error => {
-          console.error('There was an error fetching the book details!', error);
-        });
+      setIsSearching(true);
+      fetchBooks(`http://localhost:8080/home-assistant/api/books/search/title?title=${suggestion}`);
     }
   };
 
@@ -75,7 +92,6 @@ const LibraryHome = ({ view }) => {
   }, []);
 
   const renderTable = (books) => {
-    // Sort books alphabetically by title
     const sortedBooks = books.sort((a, b) => a.title.localeCompare(b.title));
 
     return (
@@ -90,11 +106,11 @@ const LibraryHome = ({ view }) => {
         </thead>
         <tbody>
           {sortedBooks.map(book => (
-            <tr key={book.id}>
+            <tr key={book.title}>
               <td>{book.title}</td>
               <td>{book.author}</td>
               <td>{book.genre}</td>
-              <td>{book.storageLocation.name}</td>
+              <td>{book.storageLocationName}</td>
             </tr>
           ))}
         </tbody>
@@ -112,7 +128,7 @@ const LibraryHome = ({ view }) => {
         )}
         {view === 'recommend' && <BookRecommendation />}
         <div>
-          <h3>{isSearching ? 'Wyniki wyszukiwania' : 'Losowe książki'}</h3> {/* Conditional heading */}
+          <h3>{isSearching ? 'Wyniki wyszukiwania' : 'Losowe książki'}</h3>
           {renderTable(searchResults)}
         </div>
       </div>
