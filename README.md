@@ -28,7 +28,6 @@ Home Assistant is a web application that allows you to gather information useful
    ```bash
    npm start
 2. **Frontend of the application should now be accessible at http://localhost:3000**
-3. You can also set up login and password for managing home library inside \home-assistant\homeassistant-frontend\src\components\credentials.js
  ## Backend Installation
  
  1. **Download Java 22:**
