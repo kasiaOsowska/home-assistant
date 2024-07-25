@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import config from '../config'; // Importujemy config
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -12,7 +13,7 @@ const Register = () => {
   const handleRegister = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:8080/home-assistant/api/users/register',
+        `${config.apiUrl}/users/register`,
         new URLSearchParams({
           username,
           password
@@ -27,7 +28,7 @@ const Register = () => {
       setUsername('');
       setPassword('');
       setError('');
-      // Optionally navigate to login page after successful registration
+      // Opcjonalnie przekierowanie do strony logowania po udanej rejestracji
       navigate('/home-assistant/login');
     } catch (error) {
       setError('Registration failed. Please try again.');

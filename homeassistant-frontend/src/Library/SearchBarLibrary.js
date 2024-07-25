@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
+import config from '../config'; // Importujemy config
 
 const SearchBar = ({ onSearch, onSuggestionClick }) => {
   const [query, setQuery] = useState('');
@@ -9,7 +10,7 @@ const SearchBar = ({ onSearch, onSuggestionClick }) => {
 
   useEffect(() => {
     if (query.length > 2) {
-      axios.get(`http://localhost:8080/home-assistant/api/books/autocomplete`, {
+      axios.get(`${config.apiUrl}/books/autocomplete`, {
         params: { query, sessionId }
       })
       .then(response => {

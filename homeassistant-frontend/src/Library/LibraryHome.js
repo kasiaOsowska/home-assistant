@@ -3,31 +3,38 @@ import axios from 'axios';
 import SearchBar from './SearchBarLibrary';
 import BookRecommendation from './BookRecommendation';
 import { useAuth } from '../components/AuthContext';
+import config from '../config'; // Importujemy config
 
 const LibraryHome = ({ view }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const { sessionId } = useAuth();
 
-  const fetchBooks = (url) => {
-    axios.get(url, {
-      params: { sessionId }
-    })
-    .then(response => {
-      setSearchResults(response.data);
+  const fetchBooks = async (url) => {
+    try {
+      const response = await axios.get(url, {
+        params: { sessionId }
+      });
+      const books = response.data;
+      
+      // Fetching the storage location names
+      for (const book of books) {
+        book.storageLocationName = await fetchStorageLocationName(book.storageLocationId);
+      }
+      
+      setSearchResults(books);
       setIsSearching(false);
-    })
-    .catch(error => {
+    } catch (error) {
       console.error('There was an error fetching the books!', error);
-    });
+    }
   };
 
   const fetchAllBooks = () => {
-    fetchBooks('http://localhost:8080/home-assistant/api/books/all');
+    fetchBooks(`${config.apiUrl}/books/all`);
   };
 
   const fetchUserBooks = () => {
-    fetchBooks('http://localhost:8080/home-assistant/api/books/by-user');
+    fetchBooks(`${config.apiUrl}/books/by-user`);
   };
 
   const handleSearch = (query) => {
@@ -35,7 +42,7 @@ const LibraryHome = ({ view }) => {
       fetchUserBooks();
     } else {
       setIsSearching(true);
-      fetchBooks(`http://localhost:8080/home-assistant/api/books/search/title?title=${query}`);
+      fetchBooks(`${config.apiUrl}/books/search/title?title=${query}`);
     }
   };
 
@@ -49,7 +56,7 @@ const LibraryHome = ({ view }) => {
 
   const fetchStorageLocationName = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:8080/home-assistant/api/storage-locations/${id}/name`);
+      const response = await axios.get(`${config.apiUrl}/storage-locations/${id}/name`);
       return response.data;
     } catch (error) {
       console.error('There was an error fetching the storage location name!', error);
@@ -57,11 +64,11 @@ const LibraryHome = ({ view }) => {
     }
   };
 
-  const fetchRandomBooks = () => {
-    axios.get('http://localhost:8080/home-assistant/api/books/by-user', {
-      params: { sessionId }
-    })
-    .then(async response => {
+  const fetchRandomBooks = async () => {
+    try {
+      const response = await axios.get(`${config.apiUrl}/books/by-user`, {
+        params: { sessionId }
+      });
       const allBooks = response.data;
       const shuffledBooks = shuffleArray([...allBooks]);
       const randomBooks = shuffledBooks.slice(0, 5);
@@ -72,10 +79,9 @@ const LibraryHome = ({ view }) => {
 
       setSearchResults(randomBooks);
       setIsSearching(false);
-    })
-    .catch(error => {
+    } catch (error) {
       console.error('There was an error fetching random books!', error);
-    });
+    }
   };
 
   const handleSuggestionClick = (suggestion) => {
@@ -83,7 +89,7 @@ const LibraryHome = ({ view }) => {
       fetchUserBooks();
     } else {
       setIsSearching(true);
-      fetchBooks(`http://localhost:8080/home-assistant/api/books/search/title?title=${suggestion}`);
+      fetchBooks(`${config.apiUrl}/books/search/title?title=${suggestion}`);
     }
   };
 

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
 import ShareBook from './ShareBook';
 import UnshareBook from './UnshareBook';
+import config from '../config'; // Importujemy config
 
 const AddBookAndLocation = () => {
   const [bookTitle, setBookTitle] = useState('');
@@ -18,7 +19,7 @@ const AddBookAndLocation = () => {
   const { sessionId } = useAuth();
 
   useEffect(() => {
-    axios.get('http://localhost:8080/home-assistant/api/storage-locations')
+    axios.get(`${config.apiUrl}/storage-locations`)
       .then(response => {
         setLocations(response.data);
       })
@@ -35,7 +36,7 @@ const AddBookAndLocation = () => {
       storageLocationId: storageLocationId
     };
 
-    axios.post('http://localhost:8080/home-assistant/api/books', bookData, {
+    axios.post(`${config.apiUrl}/books`, bookData, {
       params: { sessionId }
     })
       .then(response => {
@@ -58,11 +59,11 @@ const AddBookAndLocation = () => {
   const handleAddLocation = () => {
     const locationData = { name: locationName };
 
-    axios.post('http://localhost:8080/home-assistant/api/storage-locations', locationData)
+    axios.post(`${config.apiUrl}/storage-locations`, locationData)
       .then(response => {
         alert('Location added successfully');
         setLocationName('');
-        axios.get('http://localhost:8080/home-assistant/api/storage-locations')
+        axios.get(`${config.apiUrl}/storage-locations`)
           .then(response => {
             setLocations(response.data);
           });
@@ -75,12 +76,12 @@ const AddBookAndLocation = () => {
   const handleUpdateLocation = () => {
     const locationData = { name: newLocationName };
 
-    axios.put(`http://localhost:8080/home-assistant/api/storage-locations/${selectedLocationId}`, locationData)
+    axios.put(`${config.apiUrl}/storage-locations/${selectedLocationId}`, locationData)
       .then(response => {
         alert('Location updated successfully');
         setNewLocationName('');
         setSelectedLocationId('');
-        axios.get('http://localhost:8080/home-assistant/api/storage-locations')
+        axios.get(`${config.apiUrl}/storage-locations`)
           .then(response => {
             setLocations(response.data);
           });
@@ -171,9 +172,8 @@ const AddBookAndLocation = () => {
       </div>
 
       <div>
-        {<ShareBook sessionId={sessionId} onShareSuccess={handleShareSuccess} />}
-        
-        {<UnshareBook sessionId={sessionId} onUnshareSuccess={handleUnshareSuccess} />}
+        {showShareBook && <ShareBook sessionId={sessionId} onShareSuccess={handleShareSuccess} />}
+        {showUnshareBook && <UnshareBook sessionId={sessionId} onUnshareSuccess={handleUnshareSuccess} />}
       </div>
     </div>
   );

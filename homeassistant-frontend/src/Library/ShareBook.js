@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import config from '../config'; // Importujemy config
 
 const ShareBook = ({ sessionId, onShareSuccess }) => {
   const [users, setUsers] = useState([]);
@@ -9,12 +10,12 @@ const ShareBook = ({ sessionId, onShareSuccess }) => {
   const [userId, setUserId] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8080/home-assistant/api/users/by-session', {
+    axios.get(`${config.apiUrl}/users/by-session`, {
       params: { sessionId }
     })
       .then(response => {
         setUserId(response.data.id);
-        return axios.get('http://localhost:8080/home-assistant/api/users/all-except', {
+        return axios.get(`${config.apiUrl}/users/all-except`, {
           params: { sessionId }
         });
       })
@@ -28,7 +29,7 @@ const ShareBook = ({ sessionId, onShareSuccess }) => {
   }, [sessionId]);
 
   const handleShare = () => {
-    axios.post('http://localhost:8080/home-assistant/api/users/share', null, {
+    axios.post(`${config.apiUrl}/users/share`, null, {
       params: { targetUserId: selectedUserId, sessionId }
     })
       .then(response => {

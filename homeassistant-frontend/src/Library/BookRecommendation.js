@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
+import config from '../config'; // Importujemy config
 
 const BookRecommendation = () => {
   const [description, setDescription] = useState('');
@@ -17,7 +18,7 @@ const BookRecommendation = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.post('http://localhost:8080/home-assistant/api/books/recommend', description, {
+      const response = await axios.post(`${config.apiUrl}/books/recommend`, description, {
         headers: {
           'Content-Type': 'application/json'
         },

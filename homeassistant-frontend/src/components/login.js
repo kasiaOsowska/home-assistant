@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
+import config from '../config'; // Importujemy config
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -11,7 +12,7 @@ const Login = () => {
   const { login } = useAuth();
 
   const handleLogin = () => {
-    axios.post('http://localhost:8080/home-assistant/api/users/login', null, {
+    axios.post(`${config.apiUrl}/users/login`, null, {
       params: { username, password }
     })
     .then(response => {

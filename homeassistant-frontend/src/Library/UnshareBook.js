@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
+import config from '../config'; // Importujemy config
 
 const UnshareBook = ({ sessionId, onUnshareSuccess }) => {
   const [borrowers, setBorrowers] = useState([]);
@@ -9,7 +10,7 @@ const UnshareBook = ({ sessionId, onUnshareSuccess }) => {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8080/home-assistant/api/users/borrowers', {
+    axios.get(`${config.apiUrl}/users/borrowers`, {
       params: { sessionId }
     })
       .then(response => {
@@ -22,7 +23,7 @@ const UnshareBook = ({ sessionId, onUnshareSuccess }) => {
   }, [sessionId]);
 
   const handleUnshare = () => {
-    axios.post('http://localhost:8080/home-assistant/api/users/unshare', null, {
+    axios.post(`${config.apiUrl}/users/unshare`, null, {
       params: { borrowerId: selectedBorrowerId, sessionId }
     })
       .then(response => {

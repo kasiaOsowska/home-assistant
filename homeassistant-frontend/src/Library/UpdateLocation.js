@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import config from '../config'; // Importujemy config
 
 const UpdateLocation = () => {
   const [locations, setLocations] = useState([]);
@@ -7,7 +8,7 @@ const UpdateLocation = () => {
   const [locationName, setLocationName] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8080/home-assistant/api/storage-locations')
+    axios.get(`${config.apiUrl}/storage-locations`)
       .then(response => {
         setLocations(response.data);
       })
@@ -29,7 +30,7 @@ const UpdateLocation = () => {
 
     const locationData = { name: locationName };
 
-    axios.put(`http://localhost:8080/home-assistant/api/storage-locations/${selectedLocation.id}`, locationData)
+    axios.put(`${config.apiUrl}/storage-locations/${selectedLocation.id}`, locationData)
       .then(response => {
         alert('Location updated successfully');
         setSelectedLocation(null);
@@ -42,7 +43,7 @@ const UpdateLocation = () => {
   };
 
   const fetchLocations = () => {
-    axios.get('http://localhost:8080/home-assistant/api/storage-locations')
+    axios.get(`${config.apiUrl}/storage-locations`)
       .then(response => {
         setLocations(response.data);
       });
